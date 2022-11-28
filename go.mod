@@ -12,6 +12,8 @@ require (
 
 )
 
+require github.com/gin-contrib/timeout v0.0.3 // indirect
+
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect

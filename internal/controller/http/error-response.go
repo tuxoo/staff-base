@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"net/http"
 	"time"
 )
 
@@ -20,5 +21,13 @@ func newErrorResponse(c *gin.Context, statusCode int, err error) {
 	c.AbortWithStatusJSON(statusCode, errorResponse{
 		ErrorTime: time.Now().Format(timeFormat),
 		Message:   err.Error(),
+	})
+}
+
+func timeoutResponse(c *gin.Context) {
+	logrus.Error("request timeout")
+	c.JSON(http.StatusRequestTimeout, errorResponse{
+		ErrorTime: time.Now().Format(timeFormat),
+		Message:   "request timeout",
 	})
 }
