@@ -28,3 +28,7 @@ func (s *EmployeeService) AddEmployee(ctx context.Context, dto model.NewEmployee
 
 	return s.repository.Save(ctx, employee)
 }
+
+func (s *EmployeeService) DeleteEmployee(ctx context.Context, id int) error {
+	return s.repository.DeleteById(ctx, id)
+}

@@ -53,3 +53,15 @@ func (r *EmployeeRepository) Save(ctx context.Context, employee model.Employee) 
 
 	return employee, nil
 }
+
+func (r *EmployeeRepository) DeleteById(ctx context.Context, id int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE id=$1", employeeTable)
+
+	_, err := r.db.Exec(ctx, query, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

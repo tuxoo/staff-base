@@ -4,11 +4,6 @@ import "time"
 
 type Gender string
 
-const (
-	Male   = "Male"
-	Female = "Female"
-)
-
 type NewEmployeeDto struct {
 	FullName string `json:"fullName" binding:"required"`
 	Phone    string `json:"phone" binding:"required"`

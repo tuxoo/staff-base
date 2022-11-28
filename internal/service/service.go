@@ -8,6 +8,7 @@ import (
 
 type IEmployeeService interface {
 	AddEmployee(ctx context.Context, dto model.NewEmployeeDto) (model.Employee, error)
+	DeleteEmployee(ctx context.Context, id int) error
 }
 
 type Services struct {

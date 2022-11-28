@@ -12,6 +12,7 @@ const (
 
 type IEmployeeRepository interface {
 	Save(ctx context.Context, employee model.Employee) (model.Employee, error)
+	DeleteById(ctx context.Context, id int) error
 }
 
 type Repositories struct {
