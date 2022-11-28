@@ -1,1 +1,1 @@
-CREATE SCHEMA IF NOT EXISTS smart_loader;
+CREATE SCHEMA IF NOT EXISTS staff_base;
