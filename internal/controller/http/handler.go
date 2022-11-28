@@ -19,7 +19,7 @@ func NewHandler(employeeService service.IEmployeeService) *Handler {
 	}
 }
 
-func (h *Handler) Init(cfg config.HTTPConfig) *gin.Engine {
+func (h *Handler) Init(cfg config.AdminConfig) *gin.Engine {
 	router := gin.New()
 
 	corsConfig := cors.Config{
@@ -41,14 +41,14 @@ func (h *Handler) Init(cfg config.HTTPConfig) *gin.Engine {
 		context.String(http.StatusOK, "pong")
 	})
 
-	h.initApi(router)
+	h.initApi(router, cfg)
 
 	return router
 }
 
-func (h *Handler) initApi(router *gin.Engine) {
+func (h *Handler) initApi(router *gin.Engine, cfg config.AdminConfig) {
 	api := router.Group("/api")
 	{
-		h.initEmployeeRoutes(api)
+		h.initEmployeeRoutes(api, cfg)
 	}
 }

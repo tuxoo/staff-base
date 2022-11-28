@@ -17,6 +17,7 @@ type (
 	Config struct {
 		HTTP     HTTPConfig
 		Postgres PostgresConfig
+		Admin    AdminConfig
 	}
 
 	HTTPConfig struct {
@@ -25,6 +26,11 @@ type (
 		ReadTimeout        time.Duration `mapstructure:"readTimeout"`
 		WriteTimeout       time.Duration `mapstructure:"writeTimeout"`
 		MaxHeaderMegabytes int           `mapstructure:"maxHeaderMegabytes"`
+	}
+
+	AdminConfig struct {
+		Login    string `mapstructure:"login"`
+		Password string `mapstructure:"password"`
 	}
 )
 
@@ -75,6 +81,10 @@ func parseEnv() error {
 		return err
 	}
 
+	if err := parseAdminEnv(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -110,6 +120,14 @@ func parsePostgresEnv() error {
 	return viper.BindEnv("postgres.sslmode", "POSTGRES_SSLMODE")
 }
 
+func parseAdminEnv() error {
+	if err := viper.BindEnv("admin.login", "ADMIN_LOGIN"); err != nil {
+		return err
+	}
+
+	return viper.BindEnv("admin.password", "ADMIN_PASSWORD")
+}
+
 func unmarshalConfig(cfg *Config) error {
 	if err := viper.UnmarshalKey("http", &cfg.HTTP); err != nil {
 		return err
@@ -131,4 +149,7 @@ func setFromEnv(cfg *Config) {
 	cfg.Postgres.DB = viper.GetString("postgres.db")
 	cfg.Postgres.User = viper.GetString("postgres.user")
 	cfg.Postgres.Password = viper.GetString("postgres.password")
+
+	cfg.Admin.Login = viper.GetString("admin.login")
+	cfg.Admin.Password = viper.GetString("admin.password")
 }

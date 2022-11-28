@@ -52,7 +52,7 @@ func Run() {
 	services := service.NewServices(repositories)
 
 	httpHandlers := http.NewHandler(services.EmployeeService)
-	httpServer := server.NewHTTPServer(cfg, httpHandlers.Init(cfg.HTTP))
+	httpServer := server.NewHTTPServer(cfg, httpHandlers.Init(cfg.Admin))
 
 	go func() {
 		if err := httpServer.Run(); err != nil {
