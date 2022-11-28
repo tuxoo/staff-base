@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	contentTypeHeader = "Content-Type"
-	jsonContent       = "application/json"
-	xmlContent        = "application/xml"
+	authorizationHeader = "Authorization"
+	contentTypeHeader   = "Content-Type"
+	jsonContent         = "application/json"
+	xmlContent          = "application/xml"
 )
 
 func timeoutMiddleware() gin.HandlerFunc {
@@ -33,5 +34,13 @@ func (h *Handler) contentIdentity(c *gin.Context) {
 
 	if contentType != jsonContent && contentType != xmlContent {
 		newErrorResponse(c, http.StatusUnsupportedMediaType, errors.New("wrong content type"))
+	}
+}
+
+func (h *Handler) userIdentity(c *gin.Context) {
+	user, password, hasAuth := c.Request.BasicAuth()
+
+	if err := h.authenticator.Authentication(user, password, hasAuth); err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err)
 	}
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"github.com/tuxoo/smart-loader/staff-base/pkg/auth"
 	"strings"
 	"time"
 )
@@ -15,9 +16,9 @@ const (
 
 type (
 	Config struct {
-		HTTP     HTTPConfig
-		Postgres PostgresConfig
-		Admin    AdminConfig
+		HTTP       HTTPConfig
+		Postgres   PostgresConfig
+		AuthConfig auth.Config
 	}
 
 	HTTPConfig struct {
@@ -26,11 +27,6 @@ type (
 		ReadTimeout        time.Duration `mapstructure:"readTimeout"`
 		WriteTimeout       time.Duration `mapstructure:"writeTimeout"`
 		MaxHeaderMegabytes int           `mapstructure:"maxHeaderMegabytes"`
-	}
-
-	AdminConfig struct {
-		Login    string `mapstructure:"login"`
-		Password string `mapstructure:"password"`
 	}
 )
 
@@ -150,6 +146,6 @@ func setFromEnv(cfg *Config) {
 	cfg.Postgres.User = viper.GetString("postgres.user")
 	cfg.Postgres.Password = viper.GetString("postgres.password")
 
-	cfg.Admin.Login = viper.GetString("admin.login")
-	cfg.Admin.Password = viper.GetString("admin.password")
+	cfg.AuthConfig.Login = viper.GetString("admin.login")
+	cfg.AuthConfig.Password = viper.GetString("admin.password")
 }

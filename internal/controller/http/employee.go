@@ -4,16 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/tuxoo/smart-loader/staff-base/internal/config"
 	"github.com/tuxoo/smart-loader/staff-base/internal/model"
 	"net/http"
 	"strconv"
 )
 
-func (h *Handler) initEmployeeRoutes(api *gin.RouterGroup, cfg config.AdminConfig) {
-	employees := api.Group("/employee", gin.BasicAuth(gin.Accounts{
-		cfg.Login: cfg.Password,
-	}))
+func (h *Handler) initEmployeeRoutes(api *gin.RouterGroup) {
+	employees := api.Group("/employee", h.userIdentity)
 	{
 		checkContentType := employees.Group("/", h.contentIdentity)
 		{

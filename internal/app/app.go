@@ -8,6 +8,7 @@ import (
 	"github.com/tuxoo/smart-loader/staff-base/internal/repository"
 	"github.com/tuxoo/smart-loader/staff-base/internal/server"
 	"github.com/tuxoo/smart-loader/staff-base/internal/service"
+	"github.com/tuxoo/smart-loader/staff-base/pkg/auth"
 	"os"
 	"os/signal"
 	"syscall"
@@ -49,10 +50,12 @@ func Run() {
 	defer db.Close()
 
 	repositories := repository.NewRepositories(db)
+
+	authenticator := auth.NewEnvBasicAuth(cfg.AuthConfig)
 	services := service.NewServices(repositories)
 
-	httpHandlers := http.NewHandler(services.EmployeeService)
-	httpServer := server.NewHTTPServer(cfg, httpHandlers.Init(cfg.Admin))
+	httpHandlers := http.NewHandler(services.EmployeeService, authenticator)
+	httpServer := server.NewHTTPServer(cfg, httpHandlers.Init())
 
 	go func() {
 		if err := httpServer.Run(); err != nil {

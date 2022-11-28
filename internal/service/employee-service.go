@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"github.com/tuxoo/smart-loader/staff-base/internal/model"
 	"github.com/tuxoo/smart-loader/staff-base/internal/repository"
+	"github.com/tuxoo/smart-loader/staff-base/pkg/auth"
 	"math"
 	"time"
 )
 
 type EmployeeService struct {
-	repository repository.IEmployeeRepository
+	repository    repository.IEmployeeRepository
+	authenticator auth.BasicAuth
 }
 
 func NewEmployeeService(repository repository.IEmployeeRepository) *EmployeeService {

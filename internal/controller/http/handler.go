@@ -3,23 +3,25 @@ package http
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/tuxoo/smart-loader/staff-base/internal/config"
 	"github.com/tuxoo/smart-loader/staff-base/internal/service"
+	"github.com/tuxoo/smart-loader/staff-base/pkg/auth"
 	"net/http"
 	"time"
 )
 
 type Handler struct {
 	employeeService service.IEmployeeService
+	authenticator   auth.BasicAuth
 }
 
-func NewHandler(employeeService service.IEmployeeService) *Handler {
+func NewHandler(employeeService service.IEmployeeService, authenticator auth.BasicAuth) *Handler {
 	return &Handler{
 		employeeService: employeeService,
+		authenticator:   authenticator,
 	}
 }
 
-func (h *Handler) Init(cfg config.AdminConfig) *gin.Engine {
+func (h *Handler) Init() *gin.Engine {
 	router := gin.New()
 
 	corsConfig := cors.Config{
@@ -41,14 +43,14 @@ func (h *Handler) Init(cfg config.AdminConfig) *gin.Engine {
 		context.String(http.StatusOK, "pong")
 	})
 
-	h.initApi(router, cfg)
+	h.initApi(router)
 
 	return router
 }
 
-func (h *Handler) initApi(router *gin.Engine, cfg config.AdminConfig) {
+func (h *Handler) initApi(router *gin.Engine) {
 	api := router.Group("/api")
 	{
-		h.initEmployeeRoutes(api, cfg)
+		h.initEmployeeRoutes(api)
 	}
 }
