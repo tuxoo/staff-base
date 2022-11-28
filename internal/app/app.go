@@ -5,7 +5,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tuxoo/smart-loader/staff-base/internal/config"
 	"github.com/tuxoo/smart-loader/staff-base/internal/controller/http"
+	"github.com/tuxoo/smart-loader/staff-base/internal/repository"
 	"github.com/tuxoo/smart-loader/staff-base/internal/server"
+	"github.com/tuxoo/smart-loader/staff-base/internal/service"
 	"os"
 	"os/signal"
 	"syscall"
@@ -50,7 +52,10 @@ func Run() {
 	}
 	defer db.Close()
 
-	httpHandlers := http.NewHandler()
+	repositories := repository.NewRepositories(db)
+	services := service.NewServices(repositories)
+
+	httpHandlers := http.NewHandler(services.EmployeeService)
 	httpServer := server.NewHTTPServer(cfg, httpHandlers.Init(cfg.HTTP))
 
 	go func() {

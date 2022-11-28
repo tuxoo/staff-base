@@ -8,15 +8,19 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"github.com/swaggo/swag/example/basic/docs"
 	"github.com/tuxoo/smart-loader/staff-base/internal/config"
+	"github.com/tuxoo/smart-loader/staff-base/internal/service"
 	"net/http"
 	"time"
 )
 
 type Handler struct {
+	employeeService service.IEmployeeService
 }
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(employeeService service.IEmployeeService) *Handler {
+	return &Handler{
+		employeeService: employeeService,
+	}
 }
 
 func (h *Handler) Init(cfg config.HTTPConfig) *gin.Engine {

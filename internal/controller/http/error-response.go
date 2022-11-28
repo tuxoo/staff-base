@@ -15,10 +15,10 @@ type errorResponse struct {
 	Message   string `json:"message" example:"Token is expired"`
 }
 
-func newErrorResponse(c *gin.Context, statusCode int, message string) {
-	logrus.Error(message)
+func newErrorResponse(c *gin.Context, statusCode int, err error) {
+	logrus.Error(err)
 	c.AbortWithStatusJSON(statusCode, errorResponse{
 		ErrorTime: time.Now().Format(timeFormat),
-		Message:   message,
+		Message:   err.Error(),
 	})
 }
