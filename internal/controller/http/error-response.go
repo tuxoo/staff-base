@@ -12,8 +12,8 @@ const (
 )
 
 type errorResponse struct {
-	ErrorTime string `json:"errorTime" example:"2022-06-07 22:22:20"`
-	Message   string `json:"message" example:"Token is expired"`
+	ErrorTime string `json:"errorTime"`
+	Message   string `json:"message"`
 }
 
 func newErrorResponse(c *gin.Context, statusCode int, err error) {

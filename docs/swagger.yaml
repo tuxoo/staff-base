@@ -1,9 +1,0 @@
-basePath: /api/v1
-host: localhost:9000
-info:
-  contact: {}
-  description: API Server for ...
-  title: Staff Base Application
-  version: "1.0"
-paths: {}
-swagger: "2.0"

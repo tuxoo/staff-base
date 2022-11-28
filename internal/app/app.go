@@ -13,15 +13,6 @@ import (
 	"syscall"
 )
 
-// @title        Staff Base Application
-// @version      1.0
-// @description  API Server for ...
-
-// @host      localhost:9000
-// @BasePath  /api/v1
-
-// Run initializes whole application
-
 func Run() {
 	fmt.Println(`
  _$$$$__$$$$$$__$$$$__$$$$$$_$$$$$$_$$$$$___$$$$___$$$$__$$$$$

@@ -1,6 +1,7 @@
 .idea
 .env
 
+logs
 .docker-volumes
 
 **/migration/liquibase.properties

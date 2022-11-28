@@ -1,12 +1,8 @@
 package http
 
 import (
-	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"github.com/swaggo/swag/example/basic/docs"
 	"github.com/tuxoo/smart-loader/staff-base/internal/config"
 	"github.com/tuxoo/smart-loader/staff-base/internal/service"
 	"net/http"
@@ -37,12 +33,9 @@ func (h *Handler) Init(cfg config.HTTPConfig) *gin.Engine {
 	router.Use(
 		gin.Recovery(),
 		gin.Logger(),
-		//timeoutMiddleware(),
+		timeoutMiddleware(),
 		cors.New(corsConfig),
 	)
-
-	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.GET("/ping", func(context *gin.Context) {
 		context.String(http.StatusOK, "pong")
