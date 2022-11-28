@@ -5,12 +5,12 @@ import "time"
 type Gender string
 
 type NewEmployeeDto struct {
-	FullName string `json:"fullName" binding:"required"`
-	Phone    string `json:"phone" binding:"required"`
-	Gender   Gender `json:"gender" binding:"required"`
-	Age      int    `json:"age" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Address  string `json:"address" binding:"required"`
+	FullName string `json:"fullName" xml:"fullName" binding:"required"`
+	Phone    string `json:"phone" xml:"phone" binding:"required"`
+	Gender   Gender `json:"gender" xml:"gender" binding:"required"`
+	Age      int    `json:"age" xml:"age" binding:"required"`
+	Email    string `json:"email" xml:"email" binding:"required"`
+	Address  string `json:"address" xml:"address" binding:"required"`
 }
 
 type Employee struct {

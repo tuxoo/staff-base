@@ -21,7 +21,7 @@ func (h *Handler) initEmployeeRoutes(api *gin.RouterGroup) {
 func (h *Handler) addEmployee(c *gin.Context) {
 	var newEmployee model.NewEmployeeDto
 
-	if err := c.ShouldBindJSON(&newEmployee); err != nil {
+	if err := parseNewEmployee(c, &newEmployee); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err)
 		return
 	}
@@ -70,6 +70,19 @@ func (h *Handler) getEmployeeVacation(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]string{
 		"vacationPeriod": vacation,
 	})
+}
+
+func parseNewEmployee(c *gin.Context, newEmployee *model.NewEmployeeDto) (err error) {
+	switch c.GetHeader(contentType) {
+	case jsonContent:
+		err = c.ShouldBindJSON(&newEmployee)
+	case xmlContent:
+		err = c.ShouldBindXML(&newEmployee)
+	default:
+		err = errors.New("incorrect content type")
+	}
+
+	return
 }
 
 func getIdFromGinContext(c *gin.Context) int {
