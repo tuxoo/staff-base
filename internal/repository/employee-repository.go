@@ -35,15 +35,7 @@ func (r *EmployeeRepository) Save(ctx context.Context, employee model.Employee) 
 
 	row := tx.QueryRow(ctx, query, employee.FullName, employee.Phone, employee.Gender, employee.Age, employee.Email, employee.Address)
 
-	if err = row.Scan(
-		&employee.Id,
-		&employee.FullName,
-		&employee.Phone,
-		&employee.Gender,
-		&employee.Age,
-		&employee.Email,
-		&employee.Address,
-		&employee.RegisteredAt); err != nil {
+	if err = composeEmployee(&employee, row); err != nil {
 		return employee, err
 	}
 
@@ -54,12 +46,47 @@ func (r *EmployeeRepository) Save(ctx context.Context, employee model.Employee) 
 	return employee, nil
 }
 
+func (r *EmployeeRepository) FindById(ctx context.Context, id int) (model.Employee, error) {
+	var employee model.Employee
+
+	query := fmt.Sprintf(`
+	SELECT id, full_name, phone, gender, age, email, address, registered_at FROM %s WHERE id=$1
+	`, employeeTable)
+
+	row := r.db.QueryRow(ctx, query, id)
+	if err := composeEmployee(&employee, row); err != nil {
+		return employee, err
+	}
+
+	return employee, nil
+}
+
+func (r *EmployeeRepository) FindByName(ctx context.Context, name string) (model.Employee, error) {
+	return model.Employee{}, nil
+}
+
 func (r *EmployeeRepository) DeleteById(ctx context.Context, id int) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE id=$1", employeeTable)
 
 	_, err := r.db.Exec(ctx, query, id)
 
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func composeEmployee(employee *model.Employee, row pgx.Row) error {
+	if err := row.Scan(
+		&employee.Id,
+		&employee.FullName,
+		&employee.Phone,
+		&employee.Gender,
+		&employee.Age,
+		&employee.Email,
+		&employee.Address,
+		&employee.RegisteredAt); err != nil {
 		return err
 	}
 

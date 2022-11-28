@@ -36,13 +36,10 @@ func (h *Handler) addEmployee(c *gin.Context) {
 }
 
 func (h *Handler) deleteEmployee(c *gin.Context) {
-	idParam, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, errors.New("incorrect ID parameter"))
-	}
+	id := getIdFromGinContext(c)
 
-	if err := h.employeeService.DeleteEmployee(c.Request.Context(), idParam); err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, errors.New("incorrect ID parameter"))
+	if err := h.employeeService.DeleteEmployee(c.Request.Context(), id); err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
 	c.Status(http.StatusOK)
@@ -53,5 +50,23 @@ func (h *Handler) getEmployee(c *gin.Context) {
 }
 
 func (h *Handler) getEmployeeVacation(c *gin.Context) {
+	id := getIdFromGinContext(c)
 
+	vacation, err := h.employeeService.GetEmployeeVacation(c.Request.Context(), id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusOK, map[string]string{
+		"vacationPeriod": vacation,
+	})
+}
+
+func getIdFromGinContext(c *gin.Context) int {
+	idParam, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, errors.New("incorrect ID parameter"))
+	}
+
+	return idParam
 }
