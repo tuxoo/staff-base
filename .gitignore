@@ -2,6 +2,8 @@
 .env
 
 logs
+
 .docker-volumes
+.bin
 
 **/migration/liquibase.properties

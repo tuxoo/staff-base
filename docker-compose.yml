@@ -44,7 +44,7 @@ services:
     volumes:
       - ./logs:/home/src/logs
     ports:
-      - ${HTTP_PORT}:${HTTP_PORT}
+      - ${HTTP_PORT}:9000
     networks:
       staff-base-net:
         ipv4_address: 172.28.1.3
