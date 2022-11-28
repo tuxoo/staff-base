@@ -14,9 +14,12 @@ func (h *Handler) initEmployeeRoutes(api *gin.RouterGroup, cfg config.AdminConfi
 	employees := api.Group("/employee", gin.BasicAuth(gin.Accounts{
 		cfg.Login: cfg.Password,
 	}))
-
 	{
-		employees.POST("/", h.addEmployee)
+		checkContentType := employees.Group("/", h.contentIdentity)
+		{
+			checkContentType.POST("/", h.addEmployee)
+		}
+
 		employees.DELETE("/:id", h.deleteEmployee)
 		employees.GET("/", h.getEmployees)
 		employees.GET("/:id/vacation", h.getEmployeeVacation)
@@ -85,7 +88,7 @@ func (h *Handler) getEmployeeVacation(c *gin.Context) {
 }
 
 func parseNewEmployee(c *gin.Context, newEmployee *model.NewEmployeeDto) (err error) {
-	switch c.GetHeader(contentType) {
+	switch c.GetHeader(contentTypeHeader) {
 	case jsonContent:
 		err = c.ShouldBindJSON(&newEmployee)
 	case xmlContent:

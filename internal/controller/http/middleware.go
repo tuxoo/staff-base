@@ -1,15 +1,18 @@
 package http
 
 import (
+	"errors"
+	"fmt"
 	"github.com/gin-contrib/timeout"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"time"
 )
 
 const (
-	contentType = "Content-Type"
-	jsonContent = "application/json"
-	xmlContent  = "application/xml"
+	contentTypeHeader = "Content-Type"
+	jsonContent       = "application/json"
+	xmlContent        = "application/xml"
 )
 
 func timeoutMiddleware() gin.HandlerFunc {
@@ -20,4 +23,15 @@ func timeoutMiddleware() gin.HandlerFunc {
 		}),
 		timeout.WithResponse(timeoutResponse),
 	)
+}
+
+func (h *Handler) contentIdentity(c *gin.Context) {
+	contentType := c.GetHeader(contentTypeHeader)
+
+	fmt.Println(contentType != jsonContent)
+	fmt.Println(contentType != xmlContent)
+
+	if contentType != jsonContent && contentType != xmlContent {
+		newErrorResponse(c, http.StatusUnsupportedMediaType, errors.New("wrong content type"))
+	}
 }
