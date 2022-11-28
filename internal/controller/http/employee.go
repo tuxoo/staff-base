@@ -2,6 +2,7 @@ package http
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tuxoo/smart-loader/staff-base/internal/model"
 	"net/http"
@@ -9,11 +10,14 @@ import (
 )
 
 func (h *Handler) initEmployeeRoutes(api *gin.RouterGroup) {
-	employees := api.Group("/employee")
+	employees := api.Group("/employee", gin.BasicAuth(gin.Accounts{
+		"admin": "Qsc4!",
+	}))
+
 	{
 		employees.POST("/", h.addEmployee)
 		employees.DELETE("/:id", h.deleteEmployee)
-		employees.GET("/", h.getEmployee)
+		employees.GET("/", h.getEmployees)
 		employees.GET("/:id/vacation", h.getEmployeeVacation)
 	}
 }
@@ -37,23 +41,29 @@ func (h *Handler) addEmployee(c *gin.Context) {
 
 func (h *Handler) deleteEmployee(c *gin.Context) {
 	id := getIdFromGinContext(c)
+	if id == 0 {
+		return
+	}
 
 	if err := h.employeeService.DeleteEmployee(c.Request.Context(), id); err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.Status(http.StatusOK)
 }
 
-func (h *Handler) getEmployee(c *gin.Context) {
+func (h *Handler) getEmployees(c *gin.Context) {
 	name := c.Query("name")
 	if name == "" {
 		newErrorResponse(c, http.StatusBadRequest, errors.New("empty field [name]"))
+		return
 	}
 
 	employees, err := h.employeeService.GetEmployeeByName(c.Request.Context(), name)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, employees)
@@ -64,7 +74,8 @@ func (h *Handler) getEmployeeVacation(c *gin.Context) {
 
 	vacation, err := h.employeeService.GetEmployeeVacation(c.Request.Context(), id)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err)
+		newErrorResponse(c, http.StatusNotFound, errors.New(fmt.Sprintf("employee not found in system by id [%d]", id)))
+		return
 	}
 
 	c.JSON(http.StatusOK, map[string]string{
@@ -85,11 +96,11 @@ func parseNewEmployee(c *gin.Context, newEmployee *model.NewEmployeeDto) (err er
 	return
 }
 
-func getIdFromGinContext(c *gin.Context) int {
-	idParam, err := strconv.Atoi(c.Param("id"))
+func getIdFromGinContext(c *gin.Context) (id int) {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, errors.New("incorrect ID parameter"))
 	}
 
-	return idParam
+	return
 }

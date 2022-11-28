@@ -37,7 +37,7 @@ func (h *Handler) Init(cfg config.HTTPConfig) *gin.Engine {
 	router.Use(
 		gin.Recovery(),
 		gin.Logger(),
-		timeoutMiddleware(),
+		//timeoutMiddleware(),
 		cors.New(corsConfig),
 	)
 

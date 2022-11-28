@@ -33,7 +33,13 @@ func (s *EmployeeService) AddEmployee(ctx context.Context, dto model.NewEmployee
 }
 
 func (s *EmployeeService) GetEmployeeByName(ctx context.Context, name string) ([]model.Employee, error) {
-	return s.repository.FindByName(ctx, name)
+	employees, err := s.repository.FindByName(ctx, name)
+	if err != nil {
+		return nil, err
+	} else if employees == nil {
+		return []model.Employee{}, nil
+	}
+	return employees, nil
 }
 
 func (s *EmployeeService) GetEmployeeVacation(ctx context.Context, id int) (string, error) {
