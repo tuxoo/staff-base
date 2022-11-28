@@ -13,7 +13,7 @@ const (
 type IEmployeeRepository interface {
 	Save(ctx context.Context, employee model.Employee) (model.Employee, error)
 	FindById(ctx context.Context, id int) (model.Employee, error)
-	FindByName(ctx context.Context, name string) (model.Employee, error)
+	FindByName(ctx context.Context, name string) ([]model.Employee, error)
 	DeleteById(ctx context.Context, id int) error
 }
 

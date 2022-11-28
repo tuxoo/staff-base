@@ -13,7 +13,7 @@ func (h *Handler) initEmployeeRoutes(api *gin.RouterGroup) {
 	{
 		load.POST("/", h.addEmployee)
 		load.DELETE("/:id", h.deleteEmployee)
-		load.GET("/:id", h.getEmployee)
+		load.GET("/", h.getEmployee)
 		load.GET("/:id/vacation", h.getEmployeeVacation)
 	}
 }
@@ -46,7 +46,17 @@ func (h *Handler) deleteEmployee(c *gin.Context) {
 }
 
 func (h *Handler) getEmployee(c *gin.Context) {
+	name := c.Query("name")
+	if name == "" {
+		newErrorResponse(c, http.StatusBadRequest, errors.New("empty field [name]"))
+	}
 
+	employees, err := h.employeeService.GetEmployeeByName(c.Request.Context(), name)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusOK, employees)
 }
 
 func (h *Handler) getEmployeeVacation(c *gin.Context) {

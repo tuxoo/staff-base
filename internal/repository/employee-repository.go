@@ -61,8 +61,27 @@ func (r *EmployeeRepository) FindById(ctx context.Context, id int) (model.Employ
 	return employee, nil
 }
 
-func (r *EmployeeRepository) FindByName(ctx context.Context, name string) (model.Employee, error) {
-	return model.Employee{}, nil
+func (r *EmployeeRepository) FindByName(ctx context.Context, name string) ([]model.Employee, error) {
+	var employees []model.Employee
+	query := fmt.Sprintf(`
+	SELECT id, full_name, phone, gender, age, email, address, registered_at FROM %s WHERE full_name LIKE '%%' || $1 || '%%'
+	`, employeeTable)
+
+	rows, err := r.db.Query(ctx, query, name)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var employee model.Employee
+		if err := composeEmployee(&employee, rows); err != nil {
+			return nil, err
+		}
+
+		employees = append(employees, employee)
+	}
+
+	return employees, nil
 }
 
 func (r *EmployeeRepository) DeleteById(ctx context.Context, id int) error {

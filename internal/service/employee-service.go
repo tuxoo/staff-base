@@ -32,8 +32,8 @@ func (s *EmployeeService) AddEmployee(ctx context.Context, dto model.NewEmployee
 	return s.repository.Save(ctx, employee)
 }
 
-func (s *EmployeeService) GetEmployeeByName(ctx context.Context, name string) (model.Employee, error) {
-	return model.Employee{}, nil
+func (s *EmployeeService) GetEmployeeByName(ctx context.Context, name string) ([]model.Employee, error) {
+	return s.repository.FindByName(ctx, name)
 }
 
 func (s *EmployeeService) GetEmployeeVacation(ctx context.Context, id int) (string, error) {

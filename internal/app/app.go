@@ -36,6 +36,11 @@ func Run() {
 		logrus.Fatalf("error initializing configs: %s", err.Error())
 	}
 
+	err = config.InitLogger()
+	if err != nil {
+		logrus.Fatalf("error initializing logger: %s", err.Error())
+	}
+
 	db, err := config.NewPostgresPool(config.PostgresConfig{
 		Host:            cfg.Postgres.Host,
 		Port:            cfg.Postgres.Port,

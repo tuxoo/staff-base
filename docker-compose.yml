@@ -33,6 +33,22 @@ services:
       staff-base-net:
         ipv4_address: 172.28.1.2
 
+  app-staff-base:
+    container_name: app-staff-base
+    build: ./
+    restart: on-failure
+    env_file:
+      - .env
+    depends_on:
+      - postgres-staff-base
+    volumes:
+      - ./logs:/home/src/logs
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+    networks:
+      staff-base-net:
+        ipv4_address: 172.28.1.3
+
 networks:
   staff-base-net:
     ipam:
