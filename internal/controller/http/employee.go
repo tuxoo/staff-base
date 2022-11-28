@@ -9,12 +9,12 @@ import (
 )
 
 func (h *Handler) initEmployeeRoutes(api *gin.RouterGroup) {
-	load := api.Group("/employee")
+	employees := api.Group("/employee")
 	{
-		load.POST("/", h.addEmployee)
-		load.DELETE("/:id", h.deleteEmployee)
-		load.GET("/", h.getEmployee)
-		load.GET("/:id/vacation", h.getEmployeeVacation)
+		employees.POST("/", h.addEmployee)
+		employees.DELETE("/:id", h.deleteEmployee)
+		employees.GET("/", h.getEmployee)
+		employees.GET("/:id/vacation", h.getEmployeeVacation)
 	}
 }
 
